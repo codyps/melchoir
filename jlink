@@ -1,0 +1,3 @@
+#! /bin/bash
+set -euf -o pipefail
+exec JLinkGDBServerCL -strict -select USB -if SWD -device nRF52840_xxAA

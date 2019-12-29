@@ -22,7 +22,21 @@ const APP: () = {
         let _x: &'static mut u32 = X;
 
         hprintln!("init").unwrap();
+    }
+
+     #[idle]
+    fn idle(_: idle::Context) -> ! {
+        static mut X: u32 = 0;
+
+        // Safe access to local `static mut` variable
+        let _x: &'static mut u32 = X;
+
+        hprintln!("idle").unwrap();
 
         debug::exit(debug::EXIT_SUCCESS);
+
+        loop {
+            cortex_m::asm::wfi();
+        }
     }
 };
