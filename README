@@ -1,0 +1,5 @@
+# jlink
+
+ - `./jlink` (start jlinkgdbservercl)
+ - `nc localhost 2332` (open itm trace output)
+ - `cargo run` (run with gdb)

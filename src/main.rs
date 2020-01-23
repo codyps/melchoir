@@ -3,6 +3,7 @@
 #![no_main]
 #![no_std]
 
+use cortex_m::iprintln;
 use cortex_m_semihosting::{debug, hprintln};
 use panic_semihosting as _;
 use core::convert::TryInto;
@@ -169,7 +170,9 @@ const APP: () = {
         static mut X: u32 = 0;
 
         // Cortex-M peripherals
-        let _core: cortex_m::Peripherals = cx.core;
+        let core: cortex_m::Peripherals = cx.core;
+        let mut itm = core.ITM;
+        let itm_o = &mut itm.stim[0];
 
         // Device specific peripherals
         let device: nrf52840_pac::Peripherals = cx.device;
@@ -180,13 +183,13 @@ const APP: () = {
         let hfclkstat = Hfclkstat { r: device.CLOCK.hfclkstat.read() };
         let lfclkstat = Lfclkstat { r: device.CLOCK.lfclkstat.read() };
 
-        hprintln!("hfclkstat: {:?}", hfclkstat).unwrap();
-        hprintln!("lfclkstat: {:?}", lfclkstat).unwrap();
+        iprintln!(itm_o, "hfclkstat: {:?}", hfclkstat);
+        iprintln!(itm_o, "lfclkstat: {:?}", lfclkstat);
 
         // we probably also need a timer here to trigger things
         let radio = Radio::new(device.RADIO); 
 
-        hprintln!("init").unwrap();
+        iprintln!(itm_o, "init");
 
         init::LateResources {
             radio: radio
